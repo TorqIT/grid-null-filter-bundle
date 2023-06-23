@@ -1,0 +1,3 @@
+grid_null_filter_homepage:
+    path:     /grid_null_filter
+    defaults: { _controller: TorqIT\GridNullFilterBundle\Controller\DefaultController::indexAction }
