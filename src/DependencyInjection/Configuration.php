@@ -17,7 +17,7 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder('grid_null_filter');
+        $treeBuilder = new TreeBuilder('torq_it_grid_null_filter');
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
