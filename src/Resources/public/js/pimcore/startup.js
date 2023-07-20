@@ -39,7 +39,12 @@ const TorqITGridNullFilterBundlePlugin = new pimcore.plugin.TorqITGridNullFilter
             handler: function (m) {
 
                 const column = menu.activeHeader;
-                const dataIndex = column.dataIndex;
+                let dataIndex = column.dataIndex;
+                const type = column?.filter?.type;
+
+                if (type === "quantityValue") {
+                    dataIndex = dataIndex+"__value";
+                }
 
                 if (m.checked) {
                     const nullFilter = new Ext.util.Filter({
