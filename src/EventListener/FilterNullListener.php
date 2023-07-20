@@ -16,6 +16,10 @@ class FilterNullListener {
         $filterJson = $context['filter'];
         $filters = json_decode($filterJson);
 
+        if (!is_array($filters )) {
+            return;
+        }
+
         $nullFilterConditionsArray = [];
         foreach ($filters as $filter) {
             if ($filter->type == 'isNullOrEmpty') {
