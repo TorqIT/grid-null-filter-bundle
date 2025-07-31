@@ -29,12 +29,12 @@ class FilterNullListener
 
         $class = $context["class"];
         $classInstance = $this->createClassInstance($class);
-        $fieldDefintions = $classInstance->getClass()->getFieldDefinitions();
+        $fieldDefinitions = $classInstance->getClass()->getFieldDefinitions();
 
         /** @var ProductListing $list */
         $list = $e->getArgument('list');
         $existingCondition = $list->getCondition();
-        $nullFilterConditionsArray = $this->processFilters($filters, $fieldDefintions, $existingCondition, $context);
+        $nullFilterConditionsArray = $this->processFilters($filters, $fieldDefinitions, $existingCondition, $context);
 
         $this->applyConditionsToList($list, $existingCondition, $nullFilterConditionsArray);
     }
@@ -59,13 +59,13 @@ class FilterNullListener
     /**
      * Process all filters and build condition array
      */
-    private function processFilters(array $filters, array $fieldDefintions, string &$existingCondition, array $context): array
+    private function processFilters(array $filters, array $fieldDefinitions, string &$existingCondition, array $context): array
     {
         $nullFilterConditionsArray = [];
 
         foreach ($filters as $filter) {
             if ($filter->type === 'isNullOrEmpty') {
-                $this->processNullFilter($filter, $fieldDefintions, $existingCondition, $nullFilterConditionsArray, $context);
+                $this->processNullFilter($filter, $fieldDefinitions, $existingCondition, $nullFilterConditionsArray, $context);
             }
         }
 
@@ -77,7 +77,7 @@ class FilterNullListener
      */
     private function processNullFilter(
         stdClass $filter,
-        array $fieldDefintions,
+        array $fieldDefinitions,
         string &$existingCondition,
         array &$nullFilterConditionsArray,
         array $context
@@ -90,7 +90,7 @@ class FilterNullListener
             $this->handleClassificationStoreFilter(
                 $matches,
                 $filter->property,
-                $fieldDefintions,
+                $fieldDefinitions,
                 $existingCondition,
                 $nullFilterConditionsArray,
                 $context
@@ -98,7 +98,7 @@ class FilterNullListener
         } else {
             $this->handleStandardFilter(
                 $filter->property,
-                $fieldDefintions,
+                $fieldDefinitions,
                 $existingCondition,
                 $nullFilterConditionsArray
             );
@@ -119,7 +119,7 @@ class FilterNullListener
     private function handleClassificationStoreFilter(
         array $matches,
         string $property,
-        array $fieldDefintions,
+        array $fieldDefinitions,
         string &$existingCondition,
         array &$nullFilterConditionsArray,
         array $context
@@ -128,11 +128,11 @@ class FilterNullListener
         $groupId = $matches[2];
         $keyId = $matches[3];
 
-        if (!array_key_exists($fieldname, $fieldDefintions)) {
+        if (!array_key_exists($fieldname, $fieldDefinitions)) {
             return;
         }
 
-        $fieldDef = $fieldDefintions[$fieldname];
+        $fieldDef = $fieldDefinitions[$fieldname];
         if (!($fieldDef instanceof ClassificationStore)) {
             return;
         }
@@ -167,15 +167,15 @@ class FilterNullListener
      */
     private function handleStandardFilter(
         string $property,
-        array $fieldDefintions,
+        array $fieldDefinitions,
         string &$existingCondition,
         array &$nullFilterConditionsArray
     ): void {
-        if (!array_key_exists($property, $fieldDefintions)) {
+        if (!array_key_exists($property, $fieldDefinitions)) {
             return;
         }
 
-        $fieldDef = $fieldDefintions[$property];
+        $fieldDef = $fieldDefinitions[$property];
         $this->removeExistingCondition($property, $existingCondition);
         $nullFilterConditionsArray[] = $this->buildStandardFieldCondition($property, $fieldDef);
     }
