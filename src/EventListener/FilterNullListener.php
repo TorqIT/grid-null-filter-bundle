@@ -157,14 +157,17 @@ class FilterNullListener
         string $keyId,
         string $classId
     ): string {
+        $alias = "cskey_{$fieldname}_{$groupId}_{$keyId}";
+
         return "NOT EXISTS (
-            SELECT 1 FROM object_classificationstore_data_" . $classId . " AS cs_data
-            WHERE cs_data.id = oo_id
-            AND cs_data.fieldname = '" . $fieldname . "'
-            AND cs_data.groupId = " . $groupId . "
-            AND cs_data.keyId = " . $keyId . "
-            AND cs_data.value IS NOT NULL
-            AND cs_data.value != ''
+            SELECT 1 FROM object_classificationstore_data_" . $classId . " AS {$alias}
+            WHERE {$alias}.id = oo_id
+            AND {$alias}.fieldname = '" . $fieldname . "'
+            AND {$alias}.groupId = " . $groupId . "
+            AND {$alias}.keyId = " . $keyId . "
+            AND {$alias}.language = 'default'
+            AND {$alias}.value IS NOT NULL
+            AND {$alias}.value != ''
         )";
     }
 
