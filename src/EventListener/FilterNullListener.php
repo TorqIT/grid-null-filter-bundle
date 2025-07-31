@@ -29,7 +29,11 @@ class FilterNullListener
 
         $class = $context["class"];
         $classInstance = $this->createClassInstance($class);
-        $fieldDefinitions = $classInstance->getClass()->getFieldDefinitions();
+        $classDef = $classInstance->getClass();
+        if ($classDef === null) {
+            return;
+        }
+        $fieldDefinitions = $classDef->getFieldDefinitions();
 
         /** @var ProductListing $list */
         $list = $e->getArgument('list');
@@ -47,12 +51,14 @@ class FilterNullListener
         return isset($context['filter']);
     }
 
-    /**
-     * Creates an instance of the specified class
-     */
     private function createClassInstance(string $class): object
     {
         $className = "Pimcore\\Model\\DataObject\\" . $class;
+
+        if (!class_exists($className)) {
+            throw new \InvalidArgumentException("Class {$className} does not exist.");
+        }
+
         return new $className();
     }
 
