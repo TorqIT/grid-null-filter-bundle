@@ -40,6 +40,10 @@ class FilterNullListener
         $existingCondition = $list->getCondition();
         $nullFilterConditionsArray = $this->processFilters($filters, $fieldDefinitions, $existingCondition, $context);
 
+        if (count($nullFilterConditionsArray) === 0 ) {
+            return;
+        }
+
         $this->applyConditionsToList($list, $existingCondition, $nullFilterConditionsArray);
     }
 
