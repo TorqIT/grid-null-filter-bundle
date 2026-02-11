@@ -1,4 +1,5 @@
 {
+    "license": "POCL",
     "name": "torqit/grid-null-filter-bundle",
     "type": "pimcore-bundle",
     "require": {
